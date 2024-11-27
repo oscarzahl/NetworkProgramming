@@ -55,21 +55,22 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         if (message.startsWith("SENSOR:")) {
             String[] parts = message.split(":");
             int nodeId = Integer.parseInt(parts[1]); // Extract unique node ID
-            System.out.println("Node ID: " + nodeId);
+            System.out.println("Parsed Node ID: " + nodeId); // Debug output
+            
             String sensorData = parts[2];
-
+            System.out.println("Parsed Sensor Data: " + sensorData); // Debug output
+    
             if (!logic.hasNode(nodeId)) {
                 SensorActuatorNodeInfo newNode = new SensorActuatorNodeInfo(nodeId);
-            
                 logic.onNodeAdded(newNode);
             }
-            
-
+    
             // Process sensor data
             List<SensorReading> readings = parseSensorData(sensorData);
             logic.onSensorData(nodeId, readings); // Update GUI with sensor data
         }
     }
+    
 
     private List<SensorReading> parseSensorData(String sensorData) {
         List<SensorReading> readings = new ArrayList<>();

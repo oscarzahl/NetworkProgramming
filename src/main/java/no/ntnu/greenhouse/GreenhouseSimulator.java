@@ -41,6 +41,7 @@ public class GreenhouseSimulator {
     SensorActuatorNode node = DeviceFactory.createNode(
         temperature, humidity, windows, fans, heaters);
     nodes.put(node.getId(), node);
+    System.out.println("Node created: " + node.getId());
   }
 
   /**
@@ -72,7 +73,7 @@ public class GreenhouseSimulator {
       int nodeId = node.getId();
       new Thread(() -> {
         try {
-          GreenhouseNode tcpNode = new GreenhouseNode("localhost", 12345); // Bruk samme port som serveren
+          GreenhouseNode tcpNode = new GreenhouseNode(nodeId, "localhost", 12345); // Bruk samme port som serveren
           tcpNode.start();
         } catch (Exception e) {
           Logger.error("Failed to start TCP communication for node " + nodeId + ": " + e.getMessage());

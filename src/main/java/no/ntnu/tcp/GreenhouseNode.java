@@ -8,11 +8,13 @@ import java.util.List;
 import no.ntnu.greenhouse.Sensor;
 
 public class GreenhouseNode {
+    private final int nodeId;
     private final String serverAddress;
     private final int port;
     private final List<Sensor> sensors = new ArrayList<>();
 
-    public GreenhouseNode(String serverAddress, int port) {
+    public GreenhouseNode(int nodeId, String serverAddress, int port) {
+        this.nodeId = nodeId;
         this.serverAddress = serverAddress;
         this.port = port;
         initializeSensors();
@@ -34,7 +36,7 @@ public class GreenhouseNode {
                 while (true) {
                     try {
                         String sensorData = generateSensorData();
-                        out.println("SENSOR:1:" + sensorData);
+                        out.println("SENSOR:" + nodeId + ":" + sensorData);
                         System.out.println("Sent: " + sensorData);
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {

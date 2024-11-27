@@ -143,6 +143,7 @@ public class DeviceFactory {
    * @return a Unique ID for sensor/actuator nodes
    */
   private static int generateUniqueNodeId() {
+    System.out.println("Generating Node ID: " + nextNodeId);
     return nextNodeId++;
   }
 
