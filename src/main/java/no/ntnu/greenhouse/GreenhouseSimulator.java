@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
+import no.ntnu.tcp.GreenhouseNode;
 import no.ntnu.tools.Logger;
 
 /**
@@ -43,7 +44,8 @@ public class GreenhouseSimulator {
   }
 
   /**
-   * Start a simulation of a greenhouse - all the sensor and actuator nodes inside it.
+   * Start a simulation of a greenhouse - all the sensor and actuator nodes inside
+   * it.
    */
   public void start() {
     initiateCommunication();
@@ -66,7 +68,17 @@ public class GreenhouseSimulator {
   }
 
   private void initiateRealCommunication() {
-    // TODO - here you can set up the TCP or UDP communication
+    for (SensorActuatorNode node : nodes.values()) {
+      int nodeId = node.getId();
+      new Thread(() -> {
+        try {
+          GreenhouseNode tcpNode = new GreenhouseNode("localhost", 12345); // Bruk samme port som serveren
+          tcpNode.start();
+        } catch (Exception e) {
+          Logger.error("Failed to start TCP communication for node " + nodeId + ": " + e.getMessage());
+        }
+      }).start();
+    }
   }
 
   private void initiateFakePeriodicSwitches() {

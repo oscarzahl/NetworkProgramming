@@ -42,11 +42,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   /**
    * Application entrypoint for the GUI of a control panel.
-   * Note - this is a workaround to avoid problems with JavaFX not finding the modules!
+   * Note - this is a workaround to avoid problems with JavaFX not finding the
+   * modules!
    * We need to use another wrapper-class for the debugger to work.
    *
    * @param logic   The logic of the control panel node
-   * @param channel Communication channel for sending control commands and receiving events
+   * @param channel Communication channel for sending control commands and
+   *                receiving events
    */
   public static void startApp(ControlPanelLogic logic, CommunicationChannel channel) {
     if (logic == null) {
@@ -169,10 +171,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
       nodeTabPane = new TabPane();
       mainScene.setRoot(nodeTabPane);
     }
-    Tab nodeTab = nodeTabs.get(nodeInfo.getId());
-    if (nodeTab == null) {
-      nodeInfos.put(nodeInfo.getId(), nodeInfo);
-      nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
+
+    // Avoid creating duplicate tabs
+    if (!nodeTabs.containsKey(nodeInfo.getId())) {
+      Logger.info("Creating tab for Node #" + nodeInfo.getId());
+      Tab nodeTab = createNodeTab(nodeInfo);
+      nodeTabs.put(nodeInfo.getId(), nodeTab);
+      nodeTabPane.getTabs().add(nodeTab);
     } else {
       Logger.info("Duplicate node spawned, ignore it");
     }

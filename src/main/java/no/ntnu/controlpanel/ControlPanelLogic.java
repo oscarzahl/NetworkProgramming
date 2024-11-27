@@ -55,6 +55,11 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     }
   }
 
+  public boolean hasNode(int nodeId) {
+    return listeners.stream().anyMatch(listener -> listener instanceof SensorActuatorNodeInfo && ((SensorActuatorNodeInfo) listener).getId() == nodeId);  
+  }
+
+
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
