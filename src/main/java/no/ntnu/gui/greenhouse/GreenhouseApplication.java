@@ -11,7 +11,8 @@ import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
 /**
- * Run a greenhouse simulation with a graphical user interface (GUI), with JavaFX.
+ * Run a greenhouse simulation with a graphical user interface (GUI), with
+ * JavaFX.
  */
 public class GreenhouseApplication extends Application implements NodeStateListener {
   private static GreenhouseSimulator simulator;
@@ -50,7 +51,7 @@ public class GreenhouseApplication extends Application implements NodeStateListe
    */
   public static void startApp(boolean fake) {
     Logger.info("Running greenhouse simulator with JavaFX GUI...");
-    simulator = new GreenhouseSimulator(fake);
+    simulator = new GreenhouseSimulator(false); // Sett fake til false for ekte kommunikasjon
     launch();
   }
 

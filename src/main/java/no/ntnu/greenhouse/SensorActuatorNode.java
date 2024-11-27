@@ -179,6 +179,12 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     addRandomNoiseToSensors();
     notifySensorChanges();
     debugPrint();
+
+    StringBuilder sensorData = new StringBuilder();
+    for (Sensor sensor : sensors) {
+        sensorData.append(sensor.getReading().getFormatted()).append(",");
+    }
+    System.out.println("Generated Sensor Data for Node " + id + ": " + sensorData);
   }
 
   private void addRandomNoiseToSensors() {
