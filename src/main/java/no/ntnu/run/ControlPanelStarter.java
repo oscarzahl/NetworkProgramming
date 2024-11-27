@@ -1,5 +1,9 @@
 package no.ntnu.run;
 
+import java.io.IOException;
+import java.net.Socket;
+
+import no.ntnu.TCP.SocketCommunicationChannel;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
@@ -57,10 +61,27 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    // TODO - here you initiate TCP/UDP socket communication
-    // You communication class(es) may want to get reference to the logic and call necessary
-    // logic methods when events happen (for example, when sensor data is received)
-    return null;
+        try {
+        String serverHost = "127.0.0.1"; // Change to your server's IP if needed
+        int serverPort = 12345; // Match the port used by the server
+
+        // Connect to the server
+        Socket socket = new Socket(serverHost, serverPort);
+        Logger.info("Connected to server at " + serverHost + ":" + serverPort);
+
+        // Start a communication handler thread
+        SocketCommunicationChannel channel = new SocketCommunicationChannel(socket, logic);
+        new Thread(channel).start();
+
+        // Set the channel in the logic
+        logic.setCommunicationChannel(channel);
+
+        return channel;
+    } catch (IOException e) {
+        Logger.error("Failed to connect to server: " + e.getMessage());
+        return null;
+    }
+
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {

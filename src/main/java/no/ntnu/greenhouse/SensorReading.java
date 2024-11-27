@@ -1,5 +1,7 @@
 package no.ntnu.greenhouse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,4 +73,37 @@ public class SensorReading {
   public int hashCode() {
     return Objects.hash(type, value, unit);
   }
+
+    /**
+   * Parse a string containing sensor readings into a list of SensorReading objects.
+   * The input string should be in the format: "type=value unit,type=value unit,..."
+   * Example: "temperature=25.4 °C,humidity=67 %"
+   *
+   * @param data The formatted string containing sensor readings
+   * @return A list of SensorReading objects
+   */
+  public static List<SensorReading> parse(String data) {
+    List<SensorReading> readings = new ArrayList<>();
+    String[] entries = data.split(",");
+
+    for (String entry : entries) {
+      String[] parts = entry.split("=");
+      if (parts.length != 2) {
+        throw new IllegalArgumentException("Invalid sensor reading format: " + entry);
+      }
+
+      String type = parts[0].trim();
+      String[] valueAndUnit = parts[1].trim().split(" ");
+      if (valueAndUnit.length != 2) {
+        throw new IllegalArgumentException("Invalid sensor reading format: " + parts[1]);
+      }
+
+      double value = Double.parseDouble(valueAndUnit[0].trim());
+      String unit = valueAndUnit[1].trim();
+
+      readings.add(new SensorReading(type, value, unit));
+    }
+    return readings;
+  }
+
 }
