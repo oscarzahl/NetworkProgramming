@@ -51,6 +51,11 @@ public class GreenhouseServer {
         broadcast(formattedMessage); // Send til alle klienter, inkludert kontrollpanelet
     }
 
+    public synchronized void handleActuatorData(int nodeId, String actuatorData){
+        String formattedMessage = "ACTUATOR:" + nodeId + ":" + actuatorData; 
+        broadcast(formattedMessage);
+    }
+
     private List<SensorReading> parseSensorData(String data) {
         List<SensorReading> readings = new ArrayList<>();
         String[] sensors = data.split(",");
@@ -122,11 +127,35 @@ class ClientHandler implements Runnable {
     private void handleMessage(String message) {
         if (message.startsWith("SENSOR")) {
             String[] parts = message.split(":");
-            int nodeId = Integer.parseInt(parts[1]);
-            String sensorData = parts[2];
-            server.handleSensorData(nodeId, sensorData);
+            if(parts.length >= 3){
+                int nodeId = Integer.parseInt(parts[1]);
+                String sensorData = parts[2];
+                server.handleSensorData(nodeId, sensorData);
+            }
+        }
+
+        if (message.startsWith("ACTUATOR")) {
+            String[] parts = message.split(":");
+    
+            if (parts.length >= 3) {
+                int nodeId = Integer.parseInt(parts[1]);
+                String actuatorData = parts[2];
+    
+                String[] actuatorValues = actuatorData.split(",");
+                
+                StringBuilder formattedActuatorData = new StringBuilder();
+                for (String actuator : actuatorValues) {
+                    if (formattedActuatorData.length() > 0) {
+                        formattedActuatorData.append(",");
+                    }
+                    formattedActuatorData.append(actuator);
+                }
+    
+                server.handleActuatorData(nodeId, formattedActuatorData.toString());
+            }
         }
     }
+    
     
 
     public void sendMessage(String message) {
