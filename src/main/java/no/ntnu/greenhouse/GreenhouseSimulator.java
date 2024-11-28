@@ -13,23 +13,14 @@ import no.ntnu.tools.Logger;
  */
 public class GreenhouseSimulator {
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
-
+  private final List<GreenhouseNode> greenhouseNodes = new LinkedList<>();
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
   private final boolean fake;
 
-  /**
-   * Create a greenhouse simulator.
-   *
-   * @param fake When true, simulate a fake periodic events instead of creating
-   *             socket communication
-   */
   public GreenhouseSimulator(boolean fake) {
     this.fake = fake;
   }
 
-  /**
-   * Initialise the greenhouse but don't start the simulation just yet.
-   */
   public void initialize() {
     createNode(1, 2, 1, 0, 0);
     createNode(1, 0, 0, 2, 1);
@@ -44,10 +35,6 @@ public class GreenhouseSimulator {
     System.out.println("Node created: " + node.getId());
   }
 
-  /**
-   * Start a simulation of a greenhouse - all the sensor and actuator nodes inside
-   * it.
-   */
   public void start() {
     initiateCommunication();
     for (SensorActuatorNode node : nodes.values()) {
@@ -73,14 +60,9 @@ public class GreenhouseSimulator {
       int nodeId = node.getId();
       ActuatorCollection actuators = node.getActuators();
       List<Sensor> sensors = node.getSensors(); // Hent sensorene fra noden
-      new Thread(() -> {
-        try {
-          GreenhouseNode tcpNode = new GreenhouseNode(nodeId, "localhost", 12345, sensors, actuators); // Bruk samme port som serveren
-          tcpNode.start();
-        } catch (Exception e) {
-          Logger.error("Failed to start TCP communication for node " + nodeId + ": " + e.getMessage());
-        }
-      }).start();
+      GreenhouseNode tcpNode = new GreenhouseNode(nodeId, "localhost", 12345, sensors, actuators);
+      greenhouseNodes.add(tcpNode);
+      new Thread(tcpNode::start).start();
     }
   }
 
@@ -89,9 +71,6 @@ public class GreenhouseSimulator {
     periodicSwitches.add(new PeriodicSwitch("Heater DJ", nodes.get(2), 7, 8000));
   }
 
-  /**
-   * Stop the simulation of the greenhouse - all the nodes in it.
-   */
   public void stop() {
     stopCommunication();
     for (SensorActuatorNode node : nodes.values()) {
@@ -105,15 +84,12 @@ public class GreenhouseSimulator {
         periodicSwitch.stop();
       }
     } else {
-      // TODO - here you stop the TCP/UDP communication
+      for (GreenhouseNode node : greenhouseNodes) {
+        node.stop();
+      }
     }
   }
 
-  /**
-   * Add a listener for notification of node staring and stopping.
-   *
-   * @param listener The listener which will receive notifications
-   */
   public void subscribeToLifecycleUpdates(NodeStateListener listener) {
     for (SensorActuatorNode node : nodes.values()) {
       node.addStateListener(listener);

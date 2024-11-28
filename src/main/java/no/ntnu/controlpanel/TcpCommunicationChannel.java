@@ -46,6 +46,12 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             while ((message = in.readLine()) != null) {
                 handleServerMessage(message);
             }
+        } catch (SocketException e) {
+            if ("Socket closed".equals(e.getMessage())) {
+                System.out.println("Socket closed, stopping listener thread.");
+            } else {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,6 +119,23 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         String command = String.format("ACTUATOR:%d:%d:%b", nodeId, actuatorId, isOn);
         if (out != null) {
             out.println(command);
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            if(in != null) {
+                in.close();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

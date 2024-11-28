@@ -14,22 +14,14 @@ import no.ntnu.tools.Logger;
  */
 public class ControlPanelStarter {
   private final boolean fake;
+  private CommunicationChannel channel;
 
   public ControlPanelStarter(boolean fake) {
     this.fake = fake;
   }
 
-  /**
-   * Entrypoint for the application.
-   *
-   * @param args Command line arguments, only the first one of them used: when it is "fake",
-   *             emulate fake events, when it is either something else or not present,
-   *             use real socket communication. Go to Run → Edit Configurations.
-   *             Add "fake" to the Program Arguments field.
-   *             Apply the changes.
-   */
   public static void main(String[] args) {
-    boolean fake = false;// make it true to test in fake mode
+    boolean fake = false; // make it true to test in fake mode
     if (args.length == 1 && "fake".equals(args[0])) {
       fake = true;
       Logger.info("Using FAKE events");
@@ -40,7 +32,7 @@ public class ControlPanelStarter {
 
   private void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    CommunicationChannel channel = initiateCommunication(logic, fake);
+    channel = initiateCommunication(logic, fake);
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
@@ -48,13 +40,11 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
-    CommunicationChannel channel;
     if (fake) {
-      channel = initiateFakeSpawner(logic);
+      return initiateFakeSpawner(logic);
     } else {
-      channel = initiateSocketCommunication(logic);
+      return initiateSocketCommunication(logic);
     }
-    return channel;
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
@@ -62,7 +52,6 @@ public class ControlPanelStarter {
     int port = 12345; // Porten til serveren
     return new TcpCommunicationChannel(serverAddress, port, logic);
   }
-
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
     // Here we pretend that some events will be received with a given delay
@@ -93,6 +82,8 @@ public class ControlPanelStarter {
   }
 
   private void stopCommunication() {
-    // TODO - here you stop the TCP/UDP socket communication
+    if (channel != null) {
+      channel.close();
+    }
   }
 }
