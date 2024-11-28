@@ -71,9 +71,10 @@ public class GreenhouseSimulator {
   private void initiateRealCommunication() {
     for (SensorActuatorNode node : nodes.values()) {
       int nodeId = node.getId();
+      List<Sensor> sensors = node.getSensors(); // Hent sensorene fra noden
       new Thread(() -> {
         try {
-          GreenhouseNode tcpNode = new GreenhouseNode(nodeId, "localhost", 12345); // Bruk samme port som serveren
+          GreenhouseNode tcpNode = new GreenhouseNode(nodeId, "localhost", 12345, sensors); // Bruk samme port som serveren
           tcpNode.start();
         } catch (Exception e) {
           Logger.error("Failed to start TCP communication for node " + nodeId + ": " + e.getMessage());

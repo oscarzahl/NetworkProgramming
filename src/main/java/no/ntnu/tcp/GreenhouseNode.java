@@ -11,19 +11,15 @@ public class GreenhouseNode {
     private final int nodeId;
     private final String serverAddress;
     private final int port;
-    private final List<Sensor> sensors = new ArrayList<>();
+    private final List<Sensor> sensors;
 
-    public GreenhouseNode(int nodeId, String serverAddress, int port) {
+    public GreenhouseNode(int nodeId, String serverAddress, int port, List<Sensor> sensors) {
         this.nodeId = nodeId;
         this.serverAddress = serverAddress;
         this.port = port;
-        initializeSensors();
+        this.sensors = sensors;
     }
 
-    private void initializeSensors() {
-        sensors.add(new Sensor("temperature", 15, 35, 25, "°C"));
-        sensors.add(new Sensor("humidity", 30, 80, 50, "%"));
-    }
 
     public void start() {
         try (Socket socket = new Socket(serverAddress, port);
