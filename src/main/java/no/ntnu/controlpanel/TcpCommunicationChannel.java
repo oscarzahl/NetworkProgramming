@@ -75,7 +75,7 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             List<SensorReading> readings = parseSensorData(sensorData);
             logic.onSensorData(nodeId, readings); // Update GUI with sensor data
         }
-
+    
         if (message.startsWith("ACTUATOR:")) {
             String[] parts = message.split(":");
             int nodeId = Integer.parseInt(parts[1]);
@@ -87,28 +87,24 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             // Split actuator data by commas (multiple actuators)
             String[] actuators = actuatorData.split(",");
             for (String actuatorInfo : actuators) {
-                String[] idAndState = actuatorInfo.split(":");
-                
-                if (idAndState.length != 2) {
+                String[] typeAndState = actuatorInfo.split("=");
+    
+                if (typeAndState.length != 2) {
                     System.out.println("Invalid actuator data format: " + actuatorInfo);
                     continue; // Skip this invalid actuator data
                 }
-                
-                int actuatorId = Integer.parseInt(idAndState[0]);
-                String[] keyValue = idAndState[1].split("=");
-                
-                if (keyValue.length != 2) {
-                    System.out.println("Invalid actuator state format: " + actuatorInfo);
-                    continue;
-                }
     
-                String type = keyValue[0];
-                boolean state = Boolean.parseBoolean(keyValue[1]);
+                String type = typeAndState[0];
+                boolean state = Boolean.parseBoolean(typeAndState[1]);
     
-                System.out.println("Actuator ID: " + actuatorId + ", Type: " + type + ", State: " + state);
+                System.out.println("Actuator Type: " + type + ", State: " + state);
     
                 if (logic.hasNode(nodeId)) {
-                    logic.onActuatorStateChanged(nodeId, actuatorId, state);
+                    SensorActuatorNodeInfo nodeInfo = logic.getNodeInfo(nodeId);
+                    Actuator actuator = new Actuator(type, nodeId);
+                    actuator.set(state);
+                    nodeInfo.addActuator(actuator);
+                    logic.onActuatorStateChanged(nodeId, actuator.getId(), state);
                 }
             }
         }
