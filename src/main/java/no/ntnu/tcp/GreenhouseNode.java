@@ -45,8 +45,12 @@ public class GreenhouseNode {
                         System.out.println("Sent: " + sensorData);
     
                         String actuatorData = generateActuatorData();
-                        out.println("ACTUATOR:" + nodeId + ":" + actuatorData);
-                        System.out.println("Sent: " + actuatorData);
+                        if(actuatorData != null){
+                            out.println("ACTUATOR:" + nodeId + ":" + actuatorData);
+                            System.out.println("Sent: " + actuatorData);
+                        } else {
+                            System.out.println("No actuator data to send for node " + nodeId);
+                        }
     
                         Thread.sleep(5000);
                     }
@@ -96,13 +100,21 @@ public class GreenhouseNode {
 
         while (iterator.hasNext()) {
             Actuator actuator = iterator.next();
-            builder.append(actuator.getType())
+            builder.append(actuator.getId())
+                    .append(":")
+                    .append(actuator.getType())
                     .append("=")
                     .append(actuator.isOn())
                     .append(",");
         }
 
-        return builder.substring(0, builder.length() - 1);
+        if (builder.length() > 0) {
+            builder.deleteCharAt(builder.length() - 1);
+        } else {
+            return null;
+        }
+    
+        return builder.toString();
     }
 
     private String generateSensorData() {
