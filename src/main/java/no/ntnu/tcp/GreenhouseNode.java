@@ -91,18 +91,16 @@ public class GreenhouseNode {
     }
 
     private String generateActuatorData() {
-        StringBuilder builder = new StringBuilder();
-        Iterator<Actuator> iterator = actuators.iterator();
-
-        while (iterator.hasNext()) {
-            Actuator actuator = iterator.next();
-            builder.append(actuator.getType())
-                    .append("=")
-                    .append(actuator.isOn())
-                    .append(",");
+        StringBuilder data = new StringBuilder();
+        for (Actuator actuator : actuators) {
+            data.append(actuator.getType()).append("=").append(actuator.isOn()).append(",");
         }
-
-        return builder.substring(0, builder.length() - 1);
+        // Remove the last comma if data is not empty
+        if (data.length() > 0) {
+            return data.substring(0, data.length() - 1);
+        } else {
+            return "";
+        }
     }
 
     private String generateSensorData() {
