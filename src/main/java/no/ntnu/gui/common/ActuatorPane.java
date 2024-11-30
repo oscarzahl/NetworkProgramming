@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.listeners.common.ActuatorListener;
 
 /**
  * A section of the GUI representing a list of actuators. Can be used both on the sensor/actuator
@@ -22,6 +23,7 @@ import no.ntnu.greenhouse.ActuatorCollection;
 public class ActuatorPane extends TitledPane {
   private final Map<Actuator, SimpleStringProperty> actuatorValue = new HashMap<>();
   private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
+  private ActuatorListener actuatorListener;
 
   /**
    * Create an actuator pane.
@@ -36,6 +38,10 @@ public class ActuatorPane extends TitledPane {
     setContent(vbox);
     addActuatorControls(actuators, vbox);
     GuiTools.stretchVertically(this);
+  }
+
+  public void setActuatorListener(ActuatorListener listener) {
+    this.actuatorListener = listener;
   }
 
   private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
@@ -56,10 +62,11 @@ public class ActuatorPane extends TitledPane {
     actuatorActive.put(actuator, isSelected);
     checkbox.selectedProperty().bindBidirectional(isSelected);
     checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && newValue) {
-        actuator.turnOn();
-      } else {
-        actuator.turnOff();
+      if (newValue != null) {
+        actuator.set(newValue);
+        if (actuatorListener != null) {
+          actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
+        }
       }
     });
     return checkbox;
@@ -94,5 +101,11 @@ public class ActuatorPane extends TitledPane {
       actuatorText.set(generateActuatorText(actuator));
       actuatorSelected.set(actuator.isOn());
     });
+  }
+
+  public void addActuator(Actuator actuator) {
+    VBox vbox = (VBox) getContent();
+    vbox.getChildren().add(createActuatorGui(actuator));
+    actuatorActive.put(actuator, new SimpleBooleanProperty(actuator.isOn()));
   }
 }

@@ -2,6 +2,7 @@ package no.ntnu.controlpanel;
 
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.SensorReading;
 
 import java.io.*;
@@ -62,14 +63,12 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             String[] parts = message.split(":");
             int nodeId = Integer.parseInt(parts[1]); // Extract unique node ID
             System.out.println("Parsed Node ID: " + nodeId); // Debug output
-            
+    
             String sensorData = parts[2];
             System.out.println("Parsed Sensor Data: " + sensorData); // Debug output
     
-            if (!logic.hasNode(nodeId)) {
-                SensorActuatorNodeInfo newNode = new SensorActuatorNodeInfo(nodeId);
-                logic.onNodeAdded(newNode);
-            }
+            // Ensure the node exists
+            logic.ensureNodeExists(nodeId);
     
             // Process sensor data
             List<SensorReading> readings = parseSensorData(sensorData);
@@ -77,17 +76,26 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         }
     
         if (message.startsWith("ACTUATOR:")) {
-            String[] parts = message.split(":");
+            String[] parts = message.split(":", 3); // Split into 3 parts to handle the actuator data correctly
             int nodeId = Integer.parseInt(parts[1]);
-            System.out.println("Parsed Node ID: " + nodeId); 
+            System.out.println("Parsed Node ID: " + nodeId);
     
             String actuatorData = parts[2];
             System.out.println("Parsed Actuator Data: " + actuatorData);
     
+            ActuatorCollection actuators = new ActuatorCollection();
             // Split actuator data by commas (multiple actuators)
-            String[] actuators = actuatorData.split(",");
-            for (String actuatorInfo : actuators) {
-                String[] typeAndState = actuatorInfo.split("=");
+            String[] actuatorInfos = actuatorData.split(",");
+            for (String actuatorInfo : actuatorInfos) {
+                String[] idAndTypeAndState = actuatorInfo.split(":");
+    
+                if (idAndTypeAndState.length != 2) {
+                    System.out.println("Invalid actuator data format: " + actuatorInfo);
+                    continue; // Skip this invalid actuator data
+                }
+    
+                int actuatorId = Integer.parseInt(idAndTypeAndState[0]);
+                String[] typeAndState = idAndTypeAndState[1].split("=");
     
                 if (typeAndState.length != 2) {
                     System.out.println("Invalid actuator data format: " + actuatorInfo);
@@ -97,19 +105,20 @@ public class TcpCommunicationChannel implements CommunicationChannel {
                 String type = typeAndState[0];
                 boolean state = Boolean.parseBoolean(typeAndState[1]);
     
-                System.out.println("Actuator Type: " + type + ", State: " + state);
+                System.out.println("Actuator ID: " + actuatorId + ", Type: " + type + ", State: " + state);
     
-                if (logic.hasNode(nodeId)) {
-                    SensorActuatorNodeInfo nodeInfo = logic.getNodeInfo(nodeId);
-                    Actuator actuator = new Actuator(type, nodeId);
-                    actuator.set(state);
-                    nodeInfo.addActuator(actuator);
-                    logic.onActuatorStateChanged(nodeId, actuator.getId(), state);
-                }
+                Actuator actuator = new Actuator(actuatorId, type, nodeId);
+                actuator.set(state);
+                actuators.add(actuator);
             }
+    
+            // Ensure the node exists
+            logic.ensureNodeExists(nodeId);
+    
+            System.out.println("Calling handleInitialActuatorData with nodeId: " + nodeId);
+            logic.handleInitialActuatorData(nodeId, actuators);
         }
     }
-    
 
     private List<SensorReading> parseSensorData(String sensorData) {
         List<SensorReading> readings = new ArrayList<>();
@@ -164,10 +173,10 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             if (out != null) {
                 out.close();
             }
-            if(in != null) {
+            if (in != null) {
                 in.close();
             }
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
