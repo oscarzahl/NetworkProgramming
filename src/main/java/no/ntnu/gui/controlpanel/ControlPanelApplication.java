@@ -115,13 +115,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
-    Logger.info("Sensor data from node " + nodeId);
-    SensorPane sensorPane = sensorPanes.get(nodeId);
-    if (sensorPane != null) {
-      sensorPane.update(sensors);
-    } else {
-      Logger.error("No sensor section for node " + nodeId);
-    }
+      Logger.info("Sensor data from node " + nodeId);
+      SensorPane sensorPane = sensorPanes.get(nodeId);
+      if (sensorPane != null) {
+          sensorPane.update(sensors);
+      } else {
+          Logger.error("No sensor section for node " + nodeId);
+      }
   }
 
   @Override
@@ -137,8 +137,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
         } else {
           actuator.turnOff();
         }
-        Actuator clonedActuator = actuator.createClone();
-        actuatorPane.update(clonedActuator);
+        actuatorPane.update(actuator);
       } else {
         Logger.error(" actuator not found");
       }
@@ -189,9 +188,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     SensorPane sensorPane = createEmptySensorPane();
     sensorPanes.put(nodeInfo.getId(), sensorPane);
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
+    actuatorPane.setActuatorListener((nodeId, actuator) -> logic.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn()));
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);
+    nodeInfos.put(nodeInfo.getId(), nodeInfo); // Ensure nodeInfo is stored
     return tab;
   }
 
@@ -203,5 +204,9 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, closing the GUI");
     Platform.runLater(Platform::exit);
+  }
+
+  public static ControlPanelLogic getLogic() {
+    return logic;
   }
 }
