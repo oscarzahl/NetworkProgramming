@@ -1,6 +1,4 @@
 package no.ntnu.controlpanel;
-
-import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.SensorReading;
