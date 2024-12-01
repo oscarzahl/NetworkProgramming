@@ -27,32 +27,45 @@ We used port number 12345; This ensures that all nodes and the server communicat
 
 ## The architecture
 
-TODO - show the general architecture of your network. Which part is a server? Who are clients? 
-Do you have one or several servers? Perhaps include a picture here. 
+The network architecture is as follows:
 
-We have one server, and the clients are all the nodes that connect to the server.
-
-Clients and Server:
-Clients: All nodes connected to server
-Server: The central coordinator of communication between nodes
-
-Clients (nodes):
-Sensors: Measure the enviroment
-Actuators: Performs actions if it gets the command
-Server: Manages sensor data and actuator commands
-Control Panel: Visualizes the data for the user, and lets user control actuators
+- Server: One server that accepts incoming connections. The server parses the message sent from sensor/actuator, and sends the data to the Control panel. The control panel sends a message to the server when an actuator state has changed, The server sends the actuator state to the Sensor/Actuator node.
+- Sensor/Actuator: Nodes that establish a connection to the server. Sends the server sensor data and actuator status. It recieves control commands from the server.
+- Control panel nodes: Nodes that establish a connection to the server. Visualizes the sensor data and actuator state sent from the server. Sends the server actuator changed state from the User.
 
 
 ## The flow of information and events
 
-TODO - describe what each network node does and when. Some periodic events? Some reaction on 
-incoming packets? Perhaps split into several subsections, where each subsection describes one 
-node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes).
+These events happen in the system:
 
-Sensor nodes: Periodically send data tot he server.
-Acutator nodes: Send status updates to the server and receive commands from the server.
-Control panel nodes: Sends actuator states to server when pressed 
-Server: broadcasts commands to actuators and sends updates to the control panel.
+#The Server
+ - On startup: Listening to incoming tcp connections.
+ - On a new connection: mark the connection as a Client.
+   - Control Panel node Sensor/Actuator node are Clients.
+   - When recieving message from the Clients:
+     - If the message is a certain format, parses the message and broadcast it to all Clients.
+     - If the message is from Sensor data it gets broadcasted to Control Panel.
+     - If the message is from Control panel it sends the updated state to Sensor/Actuator nodes.
+   - On closed connection:
+     - If the connection is closed the client is removed from the server.
+    - When incorrect message format is sent:
+      - Unknown message type error message is sent.
+     
+#Sensor/Actuator node
+  - On startup:
+    - Gets created when the Greenhouse simulator is started.
+    - Establish a connection to the Server.
+    - Sends initial node data to the server.
+  - Every 5 seconds send updated Sensor readings to the server.
+  - If it recieves updated actuator state from the server it updates the actuator.
+
+#Control-Panel node
+  - On Startup:
+    - Establish a connection to the server.
+  - Recieves message from server with Sensor/Actuator data.
+  - Visualizes the Sensor Readings and Actuator State.
+  - Updates Sensor readings when recieved by server
+  - Sends message to server if the User changes the actuator state in the Control Panel
 
 ## Connection and state
 
