@@ -60,10 +60,8 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         if (message.startsWith("SENSOR:")) {
             String[] parts = message.split(":");
             int nodeId = Integer.parseInt(parts[1]); // Extract unique node ID
-            System.out.println("Parsed Node ID: " + nodeId); // Debug output
     
             String sensorData = parts[2];
-            System.out.println("Parsed Sensor Data: " + sensorData); // Debug output
     
             // Ensure the node exists
             logic.ensureNodeExists(nodeId);
@@ -76,10 +74,8 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         if (message.startsWith("ACTUATOR:")) {
             String[] parts = message.split(":", 3); // Split into 3 parts to handle the actuator data correctly
             int nodeId = Integer.parseInt(parts[1]);
-            System.out.println("Parsed Node ID: " + nodeId);
     
             String actuatorData = parts[2];
-            System.out.println("Parsed Actuator Data: " + actuatorData);
     
             ActuatorCollection actuators = new ActuatorCollection();
             // Split actuator data by commas (multiple actuators)
@@ -103,8 +99,6 @@ public class TcpCommunicationChannel implements CommunicationChannel {
                 String type = typeAndState[0];
                 boolean state = Boolean.parseBoolean(typeAndState[1]);
     
-                System.out.println("Actuator ID: " + actuatorId + ", Type: " + type + ", State: " + state);
-    
                 Actuator actuator = new Actuator(actuatorId, type, nodeId);
                 actuator.set(state);
                 actuators.add(actuator);
@@ -113,7 +107,6 @@ public class TcpCommunicationChannel implements CommunicationChannel {
             // Ensure the node exists
             logic.ensureNodeExists(nodeId);
     
-            System.out.println("Calling handleInitialActuatorData with nodeId: " + nodeId);
             logic.handleInitialActuatorData(nodeId, actuators);
         }
     }
@@ -160,8 +153,6 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         if (out != null) {
             out.println(command);
             System.out.println("Sent actuator change: " + command);
-        } else if (out == null) {
-            System.out.println("Failed to send actuator change: " + command);
         }
     }
 

@@ -80,7 +80,6 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     if (nodeInfo != null) {
       for (Actuator actuator : actuators) {
         nodeInfo.addActuator(actuator);
-        System.out.println("Initial actuator added to nodeInfo: " + actuator);
         notifyActuatorAdded(nodeId, actuator); // Notify that the actuator has been added
       }
       notifyActuatorData(nodeId, actuators);
@@ -95,9 +94,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
       nodeInfo = new SensorActuatorNodeInfo(nodeId);
       nodes.add(nodeInfo);
       onNodeAdded(nodeInfo);
-      System.out.println("NodeInfo created for nodeId: " + nodeId);
     }
-    System.out.println("NodeInfo exists for nodeId: " + nodeId);
     return nodeInfo;
   }
 
@@ -119,7 +116,6 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     // Notify all listeners about the new node
     listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
-    System.out.println("Node " + nodeInfo.getId() + " actuators: " + nodeInfo.getActuators());
     nodeInfo.getActuators().forEach(actuator -> System.out.println("Actuator: " + actuator));
   }
 

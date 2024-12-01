@@ -119,15 +119,18 @@ public class Actuator {
    * @param node The sensor node to be affected by this actuator.
    */
   public void applyImpact(SensorActuatorNode node) {
+    System.out.println("applyImpact called for actuatorId: " + this.getId() + ", state: " + this.isOn());
     for (Map.Entry<String, Double> impactEntry : impacts.entrySet()) {
-      String sensorType = impactEntry.getKey();
-      double impact = impactEntry.getValue();
-      if (!on) {
-        impact = -impact;
-      }
-      node.applyActuatorImpact(sensorType, impact);
+        String sensorType = impactEntry.getKey();
+        double impact = impactEntry.getValue();
+        if (!on) {
+            impact = -impact;
+        }
+        System.out.println("Impact applied to " + sensorType + ": " + impact);
+        node.applyActuatorImpact(sensorType, impact);
     }
-  }
+}
+
 
   @Override
   public String toString() {

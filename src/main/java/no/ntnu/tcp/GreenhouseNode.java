@@ -156,10 +156,18 @@ public class GreenhouseNode {
         }
     
         try {
-            // Parse the message
             int nodeId = Integer.parseInt(parts[1]);
             int actuatorId = Integer.parseInt(parts[2]);
-            boolean state = Boolean.parseBoolean(parts[3]);
+    
+            // Validate the state
+            String statePart = parts[3];
+            boolean state;
+            if ("true".equalsIgnoreCase(statePart) || "false".equalsIgnoreCase(statePart)) {
+                state = Boolean.parseBoolean(statePart);
+            } else {
+                System.out.println("Invalid state value in message: " + statePart);
+                return;
+            }
     
             // Find the actuator
             Actuator actuator = actuators.get(actuatorId);
@@ -175,5 +183,6 @@ public class GreenhouseNode {
             e.printStackTrace();
         }
     }
+    
     
 }
