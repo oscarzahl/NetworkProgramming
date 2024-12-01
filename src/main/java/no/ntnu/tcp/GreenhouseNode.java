@@ -156,7 +156,7 @@ public class GreenhouseNode {
                     .append(sensor.getReading().getUnit())
                     .append(",");
         }
-        return builder.substring(0, builder.length() - 1); // Fjern siste komma
+        return builder.substring(0, builder.length() - 1);
     }
 
     /**
