@@ -14,6 +14,8 @@ See protocol description in [protocol.md](protocol.md).
 
 There are several runnable classes in the project.
 
+To start the server: run the `main` method inside the `ServerStarter` class.
+
 To run the greenhouse part (with sensor/actuator nodes):
 
 * Command line version: run the `main` method inside `CommandLineGreenhouse` class.
