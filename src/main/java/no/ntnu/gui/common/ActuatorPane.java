@@ -17,7 +17,8 @@ import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.listeners.common.ActuatorListener;
 
 /**
- * A section of the GUI representing a list of actuators. Can be used both on the sensor/actuator
+ * A section of the GUI representing a list of actuators. Can be used both on
+ * the sensor/actuator
  * node, and on a control panel node.
  */
 public class ActuatorPane extends TitledPane {

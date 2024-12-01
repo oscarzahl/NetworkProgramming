@@ -32,7 +32,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private final Random random = new Random();
 
   /**
-   * Create a sensor/actuator node. Note: the node itself does not check whether the ID is unique.
+   * Create a sensor/actuator node. Note: the node itself does not check whether
+   * the ID is unique.
    * This is done at the greenhouse-level.
    *
    * @param id A unique ID of the node
@@ -54,8 +55,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   /**
    * Add sensors to the node.
    *
-   * @param template The template to use for the sensors. The template will be cloned.
-   *                 This template defines the type of sensors, the value range, value
+   * @param template The template to use for the sensors. The template will be
+   *                 cloned.
+   *                 This template defines the type of sensors, the value range,
+   *                 value
    *                 generation algorithms, etc.
    * @param n        The number of sensors to add to the node.
    */
@@ -90,7 +93,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   /**
    * Register a new listener for sensor updates.
    *
-   * @param listener The listener which will get notified every time sensor values change.
+   * @param listener The listener which will get notified every time sensor values
+   *                 change.
    */
   public void addSensorListener(SensorListener listener) {
     if (!sensorListeners.contains(listener)) {
@@ -101,7 +105,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   /**
    * Register a new listener for actuator updates.
    *
-   * @param listener The listener which will get notified every time actuator state changes.
+   * @param listener The listener which will get notified every time actuator
+   *                 state changes.
    */
   public void addActuatorListener(ActuatorListener listener) {
     if (!actuatorListeners.contains(listener)) {
@@ -112,14 +117,14 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   /**
    * Register a new listener for node state updates.
    *
-   * @param listener The listener which will get notified when the state of this node changes
+   * @param listener The listener which will get notified when the state of this
+   *                 node changes
    */
   public void addStateListener(NodeStateListener listener) {
     if (!stateListeners.contains(listener)) {
       stateListeners.add(listener);
     }
   }
-
 
   /**
    * Start simulating the sensor node's operation.
@@ -182,9 +187,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
     StringBuilder sensorData = new StringBuilder();
     for (Sensor sensor : sensors) {
-        sensorData.append(sensor.getReading().getFormatted()).append(",");
+      sensorData.append(sensor.getReading().getFormatted()).append(",");
     }
-    System.out.println("Generated Sensor Data for Node " + id + ": " + sensorData);
   }
 
   private void addRandomNoiseToSensors() {
@@ -206,7 +210,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * Toggle an actuator attached to this device.
    *
    * @param actuatorId The ID of the actuator to toggle
-   * @throws IllegalArgumentException If no actuator with given configuration is found on this node
+   * @throws IllegalArgumentException If no actuator with given configuration is
+   *                                  found on this node
    */
   public void toggleActuator(int actuatorId) {
     Actuator actuator = getActuator(actuatorId);
@@ -240,7 +245,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
   }
 
-
   /**
    * Notify the listeners that the state of this node has changed.
    *
@@ -259,7 +263,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
-   * An actuator has been turned on or off. Apply an impact from it to all sensors of given type.
+   * An actuator has been turned on or off. Apply an impact from it to all sensors
+   * of given type.
    *
    * @param sensorType The type of sensors affected
    * @param impact     The impact to apply

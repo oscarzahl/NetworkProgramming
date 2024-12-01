@@ -14,7 +14,8 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
 /**
- * Window with GUI for overview and control of one specific sensor/actuator node.
+ * Window with GUI for overview and control of one specific sensor/actuator
+ * node.
  */
 public class NodeGuiWindow extends Stage implements SensorListener, ActuatorListener {
   private static final double VERTICAL_OFFSET = 50;
@@ -47,7 +48,6 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
     setMinHeight(WINDOW_WIDTH);
   }
 
-
   private void initializeListeners(SensorActuatorNode node) {
     setOnCloseRequest(windowEvent -> shutDownNode());
     node.addSensorListener(this);
@@ -63,7 +63,6 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
     sensorPane = new SensorPane(node.getSensors());
     return new VBox(sensorPane, actuatorPane);
   }
-
 
   @Override
   public void sensorsUpdated(List<Sensor> sensors) {

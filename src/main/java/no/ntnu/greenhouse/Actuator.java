@@ -5,7 +5,8 @@ import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
 
 /**
- * An actuator that can change the environment in a way. The actuator will make impact on the
+ * An actuator that can change the environment in a way. The actuator will make
+ * impact on the
  * sensors attached to this same node.
  */
 public class Actuator {
@@ -62,11 +63,16 @@ public class Actuator {
   /**
    * Register the impact of this actuator when active.
    *
-   * @param sensorType     Which type of sensor readings will be impacted. Example: "temperature"
-   * @param diffWhenActive What will be the introduced difference in the sensor reading when
-   *                       the actuator is active. For example, if this value is 2.0 and the
-   *                       sensorType is "temperature", this means that "activating this actuator
-   *                       will increase the readings of temperature sensors attached to the
+   * @param sensorType     Which type of sensor readings will be impacted.
+   *                       Example: "temperature"
+   * @param diffWhenActive What will be the introduced difference in the sensor
+   *                       reading when
+   *                       the actuator is active. For example, if this value is
+   *                       2.0 and the
+   *                       sensorType is "temperature", this means that
+   *                       "activating this actuator
+   *                       will increase the readings of temperature sensors
+   *                       attached to the
    *                       same node by +2 degrees".
    */
   public void setImpact(String sensorType, double diffWhenActive) {
@@ -84,7 +90,8 @@ public class Actuator {
    */
   public Actuator createClone() {
     Actuator a = new Actuator(type, nodeId);
-    // Note - we pass a reference to the same map! This should not be problem, as long as we
+    // Note - we pass a reference to the same map! This should not be problem, as
+    // long as we
     // don't modify the impacts AFTER creating the template
     a.impacts = impacts;
     return a;
@@ -119,18 +126,15 @@ public class Actuator {
    * @param node The sensor node to be affected by this actuator.
    */
   public void applyImpact(SensorActuatorNode node) {
-    System.out.println("applyImpact called for actuatorId: " + this.getId() + ", state: " + this.isOn());
     for (Map.Entry<String, Double> impactEntry : impacts.entrySet()) {
-        String sensorType = impactEntry.getKey();
-        double impact = impactEntry.getValue();
-        if (!on) {
-            impact = -impact;
-        }
-        System.out.println("Impact applied to " + sensorType + ": " + impact);
-        node.applyActuatorImpact(sensorType, impact);
+      String sensorType = impactEntry.getKey();
+      double impact = impactEntry.getValue();
+      if (!on) {
+        impact = -impact;
+      }
+      node.applyActuatorImpact(sensorType, impact);
     }
-}
-
+  }
 
   @Override
   public String toString() {
@@ -163,13 +167,13 @@ public class Actuator {
   /**
    * Get the ID of the actuator.
    *
-   * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at
-   *     the whole greenhouse-network level.
+   * @return An ID which is guaranteed to be unique at a node level, not
+   *         necessarily unique at
+   *         the whole greenhouse-network level.
    */
   public int getId() {
     return id;
   }
-
 
   public int getNodeId() {
     return nodeId;

@@ -1,4 +1,5 @@
 package no.ntnu.controlpanel;
+
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.SensorReading;
@@ -60,53 +61,51 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         if (message.startsWith("SENSOR:")) {
             String[] parts = message.split(":");
             int nodeId = Integer.parseInt(parts[1]); // Extract unique node ID
-    
+
             String sensorData = parts[2];
-    
+
             // Ensure the node exists
             logic.ensureNodeExists(nodeId);
-    
+
             // Process sensor data
             List<SensorReading> readings = parseSensorData(sensorData);
             logic.onSensorData(nodeId, readings); // Update GUI with sensor data
         }
-    
+
         if (message.startsWith("ACTUATOR:")) {
             String[] parts = message.split(":", 3); // Split into 3 parts to handle the actuator data correctly
             int nodeId = Integer.parseInt(parts[1]);
-    
+
             String actuatorData = parts[2];
-    
+
             ActuatorCollection actuators = new ActuatorCollection();
             // Split actuator data by commas (multiple actuators)
             String[] actuatorInfos = actuatorData.split(",");
             for (String actuatorInfo : actuatorInfos) {
                 String[] idAndTypeAndState = actuatorInfo.split(":");
-    
+
                 if (idAndTypeAndState.length != 2) {
-                    System.out.println("Invalid actuator data format: " + actuatorInfo);
                     continue; // Skip this invalid actuator data
                 }
-    
+
                 int actuatorId = Integer.parseInt(idAndTypeAndState[0]);
                 String[] typeAndState = idAndTypeAndState[1].split("=");
-    
+
                 if (typeAndState.length != 2) {
-                    System.out.println("Invalid actuator data format: " + actuatorInfo);
                     continue; // Skip this invalid actuator data
                 }
-    
+
                 String type = typeAndState[0];
                 boolean state = Boolean.parseBoolean(typeAndState[1]);
-    
+
                 Actuator actuator = new Actuator(actuatorId, type, nodeId);
                 actuator.set(state);
                 actuators.add(actuator);
             }
-    
+
             // Ensure the node exists
             logic.ensureNodeExists(nodeId);
-    
+
             logic.handleInitialActuatorData(nodeId, actuators);
         }
     }
@@ -152,7 +151,6 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         String command = String.format("ACTUATOR:%d:%d:%b", nodeId, actuatorId, isOn);
         if (out != null) {
             out.println(command);
-            System.out.println("Sent actuator change: " + command);
         }
     }
 

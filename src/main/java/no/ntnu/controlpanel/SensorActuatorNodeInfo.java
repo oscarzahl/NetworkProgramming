@@ -4,8 +4,10 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 
 /**
- * Contains information about one sensor/actuator node. This is NOT the node itself, rather
- * an information that can be used on the control-panel side to represent the node.
+ * Contains information about one sensor/actuator node. This is NOT the node
+ * itself, rather
+ * an information that can be used on the control-panel side to represent the
+ * node.
  */
 public class SensorActuatorNodeInfo {
 
@@ -17,7 +19,6 @@ public class SensorActuatorNodeInfo {
   }
 
   public void addActuator(Actuator actuator) {
-    System.out.println("Adding actuator " + actuator.getId() + " to node " + nodeId);
     actuators.add(actuator);
   }
 

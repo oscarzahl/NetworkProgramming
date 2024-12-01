@@ -1,7 +1,8 @@
 package no.ntnu.controlpanel;
 
 /**
- * A communication channel for disseminating control commands to the sensor nodes
+ * A communication channel for disseminating control commands to the sensor
+ * nodes
  * (sending commands to the server) and receiving notifications about events.
  * Your socket class on the control panel side should implement this.
  */
@@ -18,7 +19,8 @@ public interface CommunicationChannel {
   /**
    * Open the communication channel.
    *
-   * @return True when the communication channel is successfully opened, false on error
+   * @return True when the communication channel is successfully opened, false on
+   *         error
    */
   boolean open();
 

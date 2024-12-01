@@ -5,8 +5,10 @@ import java.util.TimerTask;
 import no.ntnu.tools.Logger;
 
 /**
- * A dummy switch which periodically turns an actuator on and off. Used for manual testing.
- * Note: this class is used only for debugging, you can remove it in your final project!
+ * A dummy switch which periodically turns an actuator on and off. Used for
+ * manual testing.
+ * Note: this class is used only for debugging, you can remove it in your final
+ * project!
  */
 public class PeriodicSwitch {
   private final Timer timer;

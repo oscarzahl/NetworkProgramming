@@ -12,9 +12,11 @@ import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**
- * A fake communication channel. Emulates the node discovery (over the Internet).
+ * A fake communication channel. Emulates the node discovery (over the
+ * Internet).
  * In practice - spawn some events at specified time (specified delay).
- * Note: this class is used only for debugging, you can remove it in your final project!
+ * Note: this class is used only for debugging, you can remove it in your final
+ * project!
  */
 public class FakeCommunicationChannel implements CommunicationChannel {
 
@@ -67,13 +69,14 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     }
   }
 
-
   /**
    * Spawn a new sensor/actuator node information after a given delay.
    *
-   * @param specification A (temporary) manual configuration of the node in the following format
+   * @param specification A (temporary) manual configuration of the node in the
+   *                      following format
    *                      [nodeId] semicolon
-   *                      [actuator_count_1] underscore [actuator_type_1] space ... space
+   *                      [actuator_count_1] underscore [actuator_type_1] space
+   *                      ... space
    *                      [actuator_count_M] underscore [actuator_type_M]
    * @param delay         Delay in seconds
    */
@@ -167,7 +170,8 @@ public class FakeCommunicationChannel implements CommunicationChannel {
    * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId ID of the actuator.
    * @param on         When true, actuator is on; off when false.
-   * @param delay      The delay in seconds after which the advertisement will be generated
+   * @param delay      The delay in seconds after which the advertisement will be
+   *                   generated
    */
   public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
     Timer timer = new Timer();

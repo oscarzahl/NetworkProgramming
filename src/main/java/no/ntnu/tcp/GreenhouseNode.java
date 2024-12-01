@@ -33,24 +33,24 @@ public class GreenhouseNode {
             socket = new Socket(serverAddress, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    
+
             System.out.println("Connected to GreenhouseServer");
-    
+
             new Thread(() -> {
                 try {
                     while (!socket.isClosed()) {
                         String sensorData = generateSensorData();
                         out.println("SENSOR:" + nodeId + ":" + sensorData);
                         System.out.println("Sent: " + sensorData);
-    
+
                         String actuatorData = generateActuatorData();
-                        if(actuatorData != null){
+                        if (actuatorData != null) {
                             out.println("ACTUATOR:" + nodeId + ":" + actuatorData);
                             System.out.println("Sent: " + actuatorData);
                         } else {
                             System.out.println("No actuator data to send for node " + nodeId);
                         }
-    
+
                         Thread.sleep(5000);
                     }
                 } catch (InterruptedException e) {
@@ -63,7 +63,7 @@ public class GreenhouseNode {
                     }
                 }
             }).start();
-    
+
             String response;
             while ((response = in.readLine()) != null) {
                 handleServerMessage(response);
@@ -112,7 +112,7 @@ public class GreenhouseNode {
         } else {
             return null;
         }
-    
+
         return builder.toString();
     }
 
@@ -130,51 +130,36 @@ public class GreenhouseNode {
     }
 
     private void handleServerMessage(String message) {
-        if (message.startsWith("REQUEST_INITIAL_ACTUATOR_STATES")) {
-            sendInitialActuatorStates();
-        } else if (message.startsWith("ACTUATOR:")) {
+        if (message.startsWith("ACTUATOR:")) {
             handleActuatorStateChange(message);
-        }
-        System.out.println("Handling server command: " + message);
-    }
-
-    private void sendInitialActuatorStates() {
-        String actuatorData = generateActuatorData();
-        if (actuatorData != null) {
-            out.println("ACTUATOR:" + nodeId + ":" + actuatorData);
-            System.out.println("Sent initial actuator states: " + actuatorData);
         }
     }
 
     private void handleActuatorStateChange(String message) {
         String[] parts = message.split(":");
-    
+
         // Validate the base format
         if (parts.length != 4 || !"ACTUATOR".equals(parts[0])) {
-            System.out.println("Invalid actuator state change message: " + message);
             return;
         }
-    
+
         try {
-            int nodeId = Integer.parseInt(parts[1]);
             int actuatorId = Integer.parseInt(parts[2]);
-    
+
             // Validate the state
             String statePart = parts[3];
             boolean state;
             if ("true".equalsIgnoreCase(statePart) || "false".equalsIgnoreCase(statePart)) {
                 state = Boolean.parseBoolean(statePart);
             } else {
-                System.out.println("Invalid state value in message: " + statePart);
                 return;
             }
-    
+
             // Find the actuator
             Actuator actuator = actuators.get(actuatorId);
             if (actuator != null) {
                 // Update the actuator state
                 actuator.set(state);
-                System.out.println("Updated actuator state: " + actuatorId + " to " + state);
             } else {
                 System.out.println("Actuator not found: " + actuatorId);
             }
@@ -183,6 +168,5 @@ public class GreenhouseNode {
             e.printStackTrace();
         }
     }
-    
-    
+
 }

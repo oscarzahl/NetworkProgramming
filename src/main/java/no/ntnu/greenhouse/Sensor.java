@@ -77,7 +77,8 @@ public class Sensor {
   }
 
   /**
-   * Apply an external impact (from an actuator) to the current value of the sensor.
+   * Apply an external impact (from an actuator) to the current value of the
+   * sensor.
    *
    * @param impact The impact to apply - the delta for the value
    */

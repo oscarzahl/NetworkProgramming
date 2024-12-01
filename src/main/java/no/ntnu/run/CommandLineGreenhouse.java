@@ -10,8 +10,10 @@ public class CommandLineGreenhouse {
   /**
    * Application entrypoint for the command-line version of the simulator.
    *
-   * @param args Command line arguments, only the first one of them used: when it is "fake",
-   *             emulate fake events, when it is either something else or not present,
+   * @param args Command line arguments, only the first one of them used: when it
+   *             is "fake",
+   *             emulate fake events, when it is either something else or not
+   *             present,
    *             use real socket communication.
    */
   public static void main(String[] args) {

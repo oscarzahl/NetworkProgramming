@@ -5,11 +5,14 @@ import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.SensorReading;
 
 /**
- * Listener of events happening "inside a greenhouse", such as a node appearing, disappearing,
+ * Listener of events happening "inside a greenhouse", such as a node appearing,
+ * disappearing,
  * new sensor readings, etc.
- * While the name can be misleading, this interface will actually be usable on the
+ * While the name can be misleading, this interface will actually be usable on
+ * the
  * control-panel side, not the greenhouse side.
- * The idea is that a control panel can get events when some new information is received
+ * The idea is that a control panel can get events when some new information is
+ * received
  * about some changes in a greenhouse.
  */
 public interface GreenhouseEventListener {
@@ -38,9 +41,9 @@ public interface GreenhouseEventListener {
   /**
    * This event is fired when an actuator changes state.
    *
-   * @param nodeId ID of the node to which the actuator is attached
+   * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId ID of the actuator
-   * @param isOn  When true, actuator is on; off when false.
+   * @param isOn       When true, actuator is on; off when false.
    */
   void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn);
 }

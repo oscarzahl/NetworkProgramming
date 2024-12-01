@@ -9,7 +9,8 @@ import no.ntnu.tools.Logger;
 
 /**
  * Starter class for the control panel.
- * Note: we could launch the Application class directly, but then we would have issues with the
+ * Note: we could launch the Application class directly, but then we would have
+ * issues with the
  * debugger (JavaFX modules not found)
  */
 public class ControlPanelStarter {

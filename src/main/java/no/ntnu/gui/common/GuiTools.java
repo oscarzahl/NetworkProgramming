@@ -15,7 +15,8 @@ public class GuiTools {
   }
 
   /**
-   * Ensure that this node always try to get as much vertical space as is available to it
+   * Ensure that this node always try to get as much vertical space as is
+   * available to it
    * (proportionally to other siblings).
    *
    * @param region The region to stretch vertically

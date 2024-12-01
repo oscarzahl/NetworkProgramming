@@ -23,17 +23,20 @@ public class DeviceFactory {
   }
 
   /**
-   * Create a sensor/actuator device with specific number of sensors and actuators.
+   * Create a sensor/actuator device with specific number of sensors and
+   * actuators.
    *
-   * @param temperatureSensorCount Number of temperature sensors to have on the node
-   * @param humiditySensorCount    Number of humidity sensors to have on the device
+   * @param temperatureSensorCount Number of temperature sensors to have on the
+   *                               node
+   * @param humiditySensorCount    Number of humidity sensors to have on the
+   *                               device
    * @param windowCount            Number of windows the device is connected to
    * @param fanCount               Number of fans the device is connected to
    * @param heaterCount            Number of heaters the device is connected to
    * @return The created sensor/actuator device, with a unique ID
    */
   public static SensorActuatorNode createNode(int temperatureSensorCount, int humiditySensorCount,
-                                              int windowCount, int fanCount, int heaterCount) {
+      int windowCount, int fanCount, int heaterCount) {
     SensorActuatorNode node = new SensorActuatorNode(generateUniqueNodeId());
     if (temperatureSensorCount > 0) {
       node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);

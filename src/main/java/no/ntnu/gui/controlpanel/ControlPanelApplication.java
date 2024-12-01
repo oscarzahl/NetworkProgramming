@@ -115,13 +115,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
-      Logger.info("Sensor data from node " + nodeId);
-      SensorPane sensorPane = sensorPanes.get(nodeId);
-      if (sensorPane != null) {
-          sensorPane.update(sensors);
-      } else {
-          Logger.error("No sensor section for node " + nodeId);
-      }
+    Logger.info("Sensor data from node " + nodeId);
+    SensorPane sensorPane = sensorPanes.get(nodeId);
+    if (sensorPane != null) {
+      sensorPane.update(sensors);
+    } else {
+      Logger.error("No sensor section for node " + nodeId);
+    }
   }
 
   @Override
@@ -189,9 +189,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     sensorPanes.put(nodeInfo.getId(), sensorPane);
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
     actuatorPane.setActuatorListener((nodeId, actuator) -> {
-      System.out.println("ActuatorListener triggered for nodeId: " + nodeId + ", actuatorId: " + actuator.getId());
       logic.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
-  });
+    });
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);

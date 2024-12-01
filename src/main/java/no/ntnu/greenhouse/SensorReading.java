@@ -45,7 +45,8 @@ public class SensorReading {
   }
 
   /**
-   * Get a human-readable (formatted) version of the current reading, including the unit.
+   * Get a human-readable (formatted) version of the current reading, including
+   * the unit.
    *
    * @return The sensor reading and the unit
    */

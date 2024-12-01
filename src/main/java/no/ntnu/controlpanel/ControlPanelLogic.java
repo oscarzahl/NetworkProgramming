@@ -146,13 +146,12 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   /**
    * Send actuator state change to the node.
    *
-   * @param nodeId The ID of the node
+   * @param nodeId     The ID of the node
    * @param actuatorId The ID of the actuator
-   * @param isOn The new state of the actuator
+   * @param isOn       The new state of the actuator
    */
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     if (communicationChannel != null) {
-      System.out.println("Sending actuator change: " + nodeId + ", " + actuatorId + ", " + isOn);
       communicationChannel.sendActuatorChange(nodeId, actuatorId, isOn);
     }
     listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
