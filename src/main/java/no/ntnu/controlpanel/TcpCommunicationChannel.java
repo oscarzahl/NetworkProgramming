@@ -159,6 +159,9 @@ public class TcpCommunicationChannel implements CommunicationChannel {
         String command = String.format("ACTUATOR:%d:%d:%b", nodeId, actuatorId, isOn);
         if (out != null) {
             out.println(command);
+            System.out.println("Sent actuator change: " + command);
+        } else if (out == null) {
+            System.out.println("Failed to send actuator change: " + command);
         }
     }
 

@@ -188,7 +188,10 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     SensorPane sensorPane = createEmptySensorPane();
     sensorPanes.put(nodeInfo.getId(), sensorPane);
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
-    actuatorPane.setActuatorListener((nodeId, actuator) -> logic.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn()));
+    actuatorPane.setActuatorListener((nodeId, actuator) -> {
+      System.out.println("ActuatorListener triggered for nodeId: " + nodeId + ", actuatorId: " + actuator.getId());
+      logic.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
+  });
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);

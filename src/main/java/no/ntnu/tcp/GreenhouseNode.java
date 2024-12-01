@@ -130,7 +130,50 @@ public class GreenhouseNode {
     }
 
     private void handleServerMessage(String message) {
-        // Håndter kommandoer som påvirker aktuatorer
+        if (message.startsWith("REQUEST_INITIAL_ACTUATOR_STATES")) {
+            sendInitialActuatorStates();
+        } else if (message.startsWith("ACTUATOR:")) {
+            handleActuatorStateChange(message);
+        }
         System.out.println("Handling server command: " + message);
     }
+
+    private void sendInitialActuatorStates() {
+        String actuatorData = generateActuatorData();
+        if (actuatorData != null) {
+            out.println("ACTUATOR:" + nodeId + ":" + actuatorData);
+            System.out.println("Sent initial actuator states: " + actuatorData);
+        }
+    }
+
+    private void handleActuatorStateChange(String message) {
+        String[] parts = message.split(":");
+    
+        // Validate the base format
+        if (parts.length != 4 || !"ACTUATOR".equals(parts[0])) {
+            System.out.println("Invalid actuator state change message: " + message);
+            return;
+        }
+    
+        try {
+            // Parse the message
+            int nodeId = Integer.parseInt(parts[1]);
+            int actuatorId = Integer.parseInt(parts[2]);
+            boolean state = Boolean.parseBoolean(parts[3]);
+    
+            // Find the actuator
+            Actuator actuator = actuators.get(actuatorId);
+            if (actuator != null) {
+                // Update the actuator state
+                actuator.set(state);
+                System.out.println("Updated actuator state: " + actuatorId + " to " + state);
+            } else {
+                System.out.println("Actuator not found: " + actuatorId);
+            }
+        } catch (Exception e) {
+            System.out.println("Error processing actuator state change message: " + message);
+            e.printStackTrace();
+        }
+    }
+    
 }

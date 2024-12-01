@@ -33,6 +33,7 @@ public class ControlPanelStarter {
   private void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
     channel = initiateCommunication(logic, fake);
+    logic.setCommunicationChannel(channel);
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
