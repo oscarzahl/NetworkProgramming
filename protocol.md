@@ -197,7 +197,6 @@ The following error messages describe issues that can occur within the greenhous
 - **Description**: Raised when there is an issue parsing or handling an actuator state change message.
 - **Code Reference**: `GreenhouseNode` handleActuatorStateChange method.
 - **Handling**: The error and stack trace are logged for debugging purposes.
-  If there is an unexpected message format it logs the issue as "invalid sensor/actuator data format" the message is ingored and is not sent.
 
 ## An example scenario
 
