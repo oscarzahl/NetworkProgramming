@@ -9,6 +9,11 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.Sensor;
 
+/**
+ * GreenhouseNode represents a node in a greenhouse system.
+ * It communicates with a server to send sensor data and receive actuator
+ * commands.
+ */
 public class GreenhouseNode {
     private final int nodeId;
     private final String serverAddress;
@@ -19,6 +24,15 @@ public class GreenhouseNode {
     private PrintWriter out;
     private BufferedReader in;
 
+    /**
+     * Constructs a GreenhouseNode with the specified parameters.
+     *
+     * @param nodeId        the unique ID of the node
+     * @param serverAddress the address of the server
+     * @param port          the port to connect to
+     * @param sensors       the list of sensors associated with the node
+     * @param actuators     the actuators associated with the node
+     */
     public GreenhouseNode(int nodeId, String serverAddress, int port, List<Sensor> sensors,
             ActuatorCollection actuators) {
         this.nodeId = nodeId;
@@ -28,6 +42,9 @@ public class GreenhouseNode {
         this.actuators = actuators;
     }
 
+    /**
+     * Starts the node by connecting to the server and managing communication.
+     */
     public void start() {
         try {
             socket = new Socket(serverAddress, port);
@@ -77,6 +94,9 @@ public class GreenhouseNode {
         }
     }
 
+    /**
+     * Stops the node by closing the socket and streams.
+     */
     public void stop() {
         try {
             if (socket != null) {
@@ -93,6 +113,11 @@ public class GreenhouseNode {
         }
     }
 
+    /**
+     * Generates a formatted string representing the state of all actuators.
+     *
+     * @return a formatted string of actuator data, or null if no actuators exist
+     */
     private String generateActuatorData() {
         StringBuilder builder = new StringBuilder();
         Iterator<Actuator> iterator = actuators.iterator();
@@ -116,6 +141,11 @@ public class GreenhouseNode {
         return builder.toString();
     }
 
+    /**
+     * Generates a formatted string representing the state of all sensors.
+     *
+     * @return a formatted string of sensor data
+     */
     private String generateSensorData() {
         StringBuilder builder = new StringBuilder();
         for (Sensor sensor : sensors) {
@@ -129,12 +159,22 @@ public class GreenhouseNode {
         return builder.substring(0, builder.length() - 1); // Fjern siste komma
     }
 
+    /**
+     * Handles incoming messages from the server.
+     *
+     * @param message the message received from the server
+     */
     private void handleServerMessage(String message) {
         if (message.startsWith("ACTUATOR:")) {
             handleActuatorStateChange(message);
         }
     }
 
+    /**
+     * Processes actuator state change messages from the server.
+     *
+     * @param message the message containing actuator state change information
+     */
     private void handleActuatorStateChange(String message) {
         String[] parts = message.split(":");
 
