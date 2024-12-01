@@ -1,0 +1,18 @@
+
+Our group took this course last year, we are retaking the course this semester and we were not signed up for the IDATA2304 course on Blackboard.
+Since we did not get the project description until Nov 26, we did not have time to work in Sprints.
+
+
+### Distributed Task
+
+We mostly work on the same things sometimes on different branches, when either accomplished the goal we would work from their solution.
+There are still some ways we split responsobility:
+
+Jeremy: 
+  - Responsible for parsing messages on the Server
+  - Responsible for sending correct messages out from the Server
+
+Oscar:
+  - Implemented communication between nodes and Server
+  - Responsible for getting node readings on ControlPanel
+  - Responsible for stop communication
